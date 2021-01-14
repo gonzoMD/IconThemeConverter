@@ -31,6 +31,30 @@ foreach ($file in Get-ChildItem $sourcePath*json)
             & $convert $inp $out | Wait-Process
             Remove-Item $inp
         }
+        $output_path = Join-Path -Path $pwd.path -ChildPath "output" | Join-Path -ChildPath $j.path_out_bmp
+        New-Item -ItemType directory -Force -Path $output_path
+        foreach ($i in $j.bitmap)
+        {
+            foreach ($f in $i.file_in)
+            {
+                $output_file = $i.file_out+'-'+$i.file_in.IndexOf($f) +'.png'
+                $input = Join-Path -Path $themePath -ChildPath $f.src
+                $output = '--export-filename="'+$(Join-Path -Path $output_path -ChildPath $output_file)+'"'
+                $w='--export-width='+$i.size
+                $h='--export-height='+$i.size
+                & $inkscape $output $w $h $input | Wait-Process
+            }
+            $inp = Get-ChildItem $output_path -filter *.png | % { $_.FullName }
+            $param = "+append"
+            $out = Join-Path -Path $output_path -ChildPath $i.file_out
+            & $convert $inp $param $out | Wait-Process
+            Remove-Item $inp
+            $inp = $out
+            $param = "-modulate"
+            $param_val = "100,130"
+            $out = Join-Path -Path $output_path -ChildPath $i.file_hov_out
+            & $convert $inp $param $param_val $out | Wait-Process
+        }
     }
 }
 
