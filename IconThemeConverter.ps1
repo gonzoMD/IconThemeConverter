@@ -14,7 +14,7 @@ foreach ($file in Get-ChildItem $sourcePath*json)
     {
         $output_path = Join-Path -Path $pwd.path -ChildPath "output" | Join-Path -ChildPath $j.path_out
         New-Item -ItemType directory -Force -Path $output_path | Out-Null
-        
+        Write-Host("Process definition file: "+ $file)
         foreach ($i in $j.icon)
         {
             foreach ($f in $i.file_in)
@@ -28,6 +28,7 @@ foreach ($file in Get-ChildItem $sourcePath*json)
             }
             $inp = Get-ChildItem $output_path -filter *.png | % { $_.FullName }
             $out = Join-Path -Path $output_path -ChildPath $i.file_out
+            Write-Host("$([char]9)Convert to icon file: " + $i.file_out)
             & $convert $inp $out | Wait-Process
             Remove-Item $inp
         }
@@ -47,12 +48,14 @@ foreach ($file in Get-ChildItem $sourcePath*json)
             $inp = Get-ChildItem $output_path -filter *.png | % { $_.FullName }
             $param = "+append"
             $out = Join-Path -Path $output_path -ChildPath $i.file_out
+            Write-Host("$([char]9)Convert to bitmap file: " + $i.file_out)
             & $convert $inp $param $out | Wait-Process
             Remove-Item $inp
             $inp = $out
             $param = "-modulate"
             $param_val = "100,130"
             $out = Join-Path -Path $output_path -ChildPath $i.file_hov_out
+            Write-Host("$([char]9)Convert to bitmap file: " + $i.file_hov_out)
             & $convert $inp $param $param_val $out | Wait-Process
         }
     }
