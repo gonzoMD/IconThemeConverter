@@ -12,7 +12,7 @@ foreach ($file in Get-ChildItem $sourcePath*json)
 
     foreach ($j in $json)
     {
-        $output_path = Join-Path -Path $pwd.path -ChildPath "output" | Join-Path -ChildPath $j.path_out
+        $output_path = Join-Path -Path $pwd.path -ChildPath "output" | Join-Path -ChildPath $j.path_out_ico
         New-Item -ItemType directory -Force -Path $output_path | Out-Null
         Write-Host("Process definition file: "+ $file)
         foreach ($i in $j.icon)
