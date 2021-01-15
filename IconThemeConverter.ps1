@@ -13,7 +13,7 @@ foreach ($file in Get-ChildItem $sourcePath*json)
     foreach ($j in $json)
     {
         $output_path = Join-Path -Path $pwd.path -ChildPath "output" | Join-Path -ChildPath $j.path_out
-        New-Item -ItemType directory -Force -Path $output_path
+        New-Item -ItemType directory -Force -Path $output_path | Out-Null
         
         foreach ($i in $j.icon)
         {
@@ -32,7 +32,7 @@ foreach ($file in Get-ChildItem $sourcePath*json)
             Remove-Item $inp
         }
         $output_path = Join-Path -Path $pwd.path -ChildPath "output" | Join-Path -ChildPath $j.path_out_bmp
-        New-Item -ItemType directory -Force -Path $output_path
+        New-Item -ItemType directory -Force -Path $output_path | Out-Null
         foreach ($i in $j.bitmap)
         {
             foreach ($f in $i.file_in)
