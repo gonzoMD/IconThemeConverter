@@ -25,6 +25,11 @@ foreach ($file in Get-ChildItem $sourcePath*json)
                 $w='--export-width='+$f.size
                 $h='--export-height='+$f.size
                 & $inkscape $output $w $h $input | Wait-Process
+                if($f.canvas)
+                {
+                    $inout = $(Join-Path -Path $output_path -ChildPath $output_file)
+                    & $convert $inout -gravity $f.canvas.gravity -background transparent -extent $([string]$f.canvas.size+"x"+[string]$f.canvas.size) $inout | Wait-Process
+                }
             }
             $inp = Get-ChildItem $output_path -filter *.png | % { $_.FullName }
             $out = Join-Path -Path $output_path -ChildPath $i.file_out
