@@ -25,6 +25,17 @@ foreach ($file in Get-ChildItem $sourcePath*json)
                 $w='--export-width='+$f.size
                 $h='--export-height='+$f.size
                 & $inkscape $output $w $h $input | Wait-Process
+                if($f.overlay)
+                {
+                    $inout = $(Join-Path -Path $output_path -ChildPath $output_file)
+                    $input = Join-Path -Path $themePath -ChildPath $f.overlay.src
+                    $output = '--export-filename="'+$(Join-Path -Path $output_path -ChildPath 'overlay.png')+'"'
+                    $w='--export-width='+$f.overlay.size
+                    $h='--export-height='+$f.overlay.size
+                    & $inkscape $output $w $h $input | Wait-Process
+                    & $convert $inout $(Join-Path -Path $output_path -ChildPath 'overlay.png') -gravity $f.overlay.gravity -composite $inout | Wait-Process
+                    Remove-Item $(Join-Path -Path $output_path -ChildPath 'overlay.png')
+                }
                 if($f.canvas)
                 {
                     $inout = $(Join-Path -Path $output_path -ChildPath $output_file)
