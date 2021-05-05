@@ -1,0 +1,67 @@
+{
+        "name": "shell32",
+        "path_out_ico":"dll/win32/shell32/res/icons",
+        "path_out_bmp":"dll/win32/shell32/res/bitmaps",
+        "icon": [
+            {
+                "file_out":"1.ico",
+                "file_in":[
+                    {"size": 16, "src": "Flat-Remix-Yellow/mimetypes/symbolic/text-x-generic-symbolic.svg"},
+                    {"size": 32, "src": "Flat-Remix-Yellow/mimetypes/scalable/application.svg"},
+                    {"size": 48, "src": "Flat-Remix-Yellow/mimetypes/scalable/application.svg"}
+                ]
+            },
+            {
+                "file_out":"2.ico",
+                "file_in":[
+                    {"size": 16, "src": "Flat-Remix-Yellow/mimetypes/symbolic/x-office-document-symbolic.svg"},
+                    {"size": 32, "src": "Flat-Remix-Yellow/mimetypes/scalable/application-document.svg"},
+                    {"size": 48, "src": "Flat-Remix-Yellow/mimetypes/scalable/application-document.svg"}
+                ]
+            },
+            {
+                "file_out":"54.ico",
+                "file_in":[
+                    {"size": 16, "src": "Flat-Remix-Yellow/devices/symbolic/drive-harddisk-system-symbolic.svg", "overlay":{"src": "Flat-Remix-Yellow/emblems/scalable/emblem-question.svg", "size": 9, "gravity": "Southeast"}},
+                    {"size": 32, "src": "Flat-Remix-Yellow/apps/scalable/gnome-disks.svg", "overlay":{"src": "Flat-Remix-Yellow/emblems/scalable/emblem-question.svg", "size": 16, "gravity": "Southeast"}},
+                    {"size": 48, "src": "Flat-Remix-Yellow/apps/scalable/gnome-disks.svg", "overlay":{"src": "Flat-Remix-Yellow/emblems/scalable/emblem-question.svg", "size": 20, "gravity": "Southeast"}}
+                ]
+            },
+            {
+                "file_out":"322.ico",
+                "file_in":[
+                    {"size": 16, "src": "Flat-Remix-Yellow/apps/scalable/applications-featured.svg"},
+                    {"size": 24, "src": "Flat-Remix-Yellow/apps/scalable/applications-featured.svg", "canvas":{"size": 32, "gravity": "Center"}},
+                    {"size": 32, "src": "Flat-Remix-Yellow/apps/scalable/applications-featured.svg", "canvas":{"size": 48, "gravity": "Center"}}
+                ]
+            }
+        ],
+        "bitmap": [
+            {
+                "size": 16,
+                "file_out":"225.bmp",
+                "file_hov_out":"226.bmp",
+                "file_in":[
+                {"src": "Flat-Remix-Yellow/actions/scalable/edit-cut.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/edit-copy.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/edit-paste.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/font-select.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/send-to.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/document-preview.svg"}
+                ]
+            },
+            {
+                "size": 24,
+                "file_out":"227.bmp",
+                "file_hov_out":"228.bmp",
+                "file_in":[
+                {"src": "Flat-Remix-Yellow/actions/scalable/edit-cut.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/edit-copy.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/edit-paste.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/font-select.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/send-to.svg"},
+                {"src": "Flat-Remix-Yellow/actions/scalable/document-preview.svg"}
+                ]
+            }
+        ]
+}
