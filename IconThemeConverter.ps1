@@ -4,7 +4,7 @@ $settings = Get-Content -Raw -Encoding UTF8 settings.json | ConvertFrom-Json
 $sourcePath = Resolve-Path $settings.path_jsonfiles
 $themePath = Resolve-Path $settings.path_icontheme
 $inkscape = Resolve-Path $settings.inkscape
-$convert = Resolve-Path $settings.convert
+$magick = Resolve-Path $settings.magick
 
 foreach ($file in Get-ChildItem $sourcePath*json) 
 {
@@ -33,19 +33,19 @@ foreach ($file in Get-ChildItem $sourcePath*json)
                     $w='--export-width='+$f.overlay.size
                     $h='--export-height='+$f.overlay.size
                     & $inkscape $output $w $h $input | Wait-Process
-                    & $convert $inout $(Join-Path -Path $output_path -ChildPath 'overlay.png') -gravity $f.overlay.gravity -composite $inout | Wait-Process
+                    & $magick convert $inout $(Join-Path -Path $output_path -ChildPath 'overlay.png') -gravity $f.overlay.gravity -composite $inout | Wait-Process
                     Remove-Item $(Join-Path -Path $output_path -ChildPath 'overlay.png')
                 }
                 if($f.canvas)
                 {
                     $inout = $(Join-Path -Path $output_path -ChildPath $output_file)
-                    & $convert $inout -gravity $f.canvas.gravity -background transparent -extent $([string]$f.canvas.size+"x"+[string]$f.canvas.size) $inout | Wait-Process
+                    & $magick convert $inout -gravity $f.canvas.gravity -background transparent -extent $([string]$f.canvas.size+"x"+[string]$f.canvas.size) $inout | Wait-Process
                 }
             }
             $inp = Get-ChildItem $output_path -filter *.png | % { $_.FullName }
             $out = Join-Path -Path $output_path -ChildPath $i.file_out
             Write-Host("$([char]9)Convert to icon file: " + $i.file_out)
-            & $convert $inp $out | Wait-Process
+            & $magick convert $inp $out | Wait-Process
             Remove-Item $inp
         }
         $output_path = Join-Path -Path $pwd.path -ChildPath "output" | Join-Path -ChildPath $j.path_out_bmp
@@ -65,14 +65,14 @@ foreach ($file in Get-ChildItem $sourcePath*json)
             $param = "+append"
             $out = Join-Path -Path $output_path -ChildPath $i.file_out
             Write-Host("$([char]9)Convert to bitmap file: " + $i.file_out)
-            & $convert $inp $param $out | Wait-Process
+            & $magick convert $inp $param $out | Wait-Process
             Remove-Item $inp
             $inp = $out
             $param = "-modulate"
             $param_val = "100,130"
             $out = Join-Path -Path $output_path -ChildPath $i.file_hov_out
             Write-Host("$([char]9)Convert to bitmap file: " + $i.file_hov_out)
-            & $convert $inp $param $param_val $out | Wait-Process
+            & $magick convert $inp $param $param_val $out | Wait-Process
         }
     }
 }
