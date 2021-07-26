@@ -41,11 +41,28 @@ foreach ($file in Get-ChildItem $sourcePath*json)
                     $inout = $(Join-Path -Path $output_path -ChildPath $output_file)
                     & $magick convert $inout -gravity $f.canvas.gravity -background transparent -extent $([string]$f.canvas.size+"x"+[string]$f.canvas.size) $inout | Wait-Process
                 }
+                if($f.colordepth)
+                {
+                    foreach ($c in $f.colordepth)
+                    {
+                        if($c -eq 8)
+                        {
+                            $input = Join-Path -Path $output_path -ChildPath $output_file
+                            $output = Join-Path -Path $output_path -ChildPath $((Get-Item $input).Basename+'-8.png')
+                            $output = 'PNG8:'+$output
+                            & $magick convert $input -background magenta $output | Wait-Process
+                        }
+                        else
+                        {
+                            Write-Host("$([char]9)Unsupported color depth: " + $c)
+                        }
+                    }
+                }
             }
             $inp = Get-ChildItem $output_path -filter *.png | % { $_.FullName }
             $out = Join-Path -Path $output_path -ChildPath $i.file_out
             Write-Host("$([char]9)Convert to icon file: " + $i.file_out)
-            & $magick convert $inp $out | Wait-Process
+            & $magick convert $inp -transparent magenta $out | Wait-Process
             Remove-Item $inp
         }
         $output_path = Join-Path -Path $pwd.path -ChildPath "output" | Join-Path -ChildPath $j.path_out_bmp
