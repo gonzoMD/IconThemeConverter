@@ -3,6 +3,30 @@ import json
 import cairosvg
 from PIL import Image
 
+# Helper function to calculate the position of overlays and icons inside a bigger canvas
+def getposition(sizea, sizeb, gravity="center"):
+  if gravity.lower()=="center":
+    resxy = (((sizea - sizeb)//2),((sizea - sizeb)//2))
+  elif gravity.lower()=="north":
+    resxy = (((sizea - sizeb)//2),0)
+  elif gravity.lower()=="east":
+    resxy = ((sizea - sizeb),((sizea - sizeb)//2))
+  elif gravity.lower()=="south":
+    resxy = (((sizea - sizeb)//2),(sizea - sizeb))
+  elif gravity.lower()=="west":
+    resxy = (0,((sizea - sizeb)//2))
+  elif gravity.lower()=="northwest":
+    resxy = (0,0)
+  elif gravity.lower()=="northeast":
+    resxy = ((sizea - sizeb),0)
+  elif gravity.lower()=="southwest":
+    resxy = (0,(sizea - sizeb))
+  elif gravity.lower()=="southeast":
+    resxy = ((sizea - sizeb),(sizea - sizeb))
+  else:
+    resxy=(0,0)
+  return resxy
+
 # read the settings file
 with open('settings.json', 'r') as f:
   settings = json.load(f)
@@ -38,11 +62,10 @@ for file in os.listdir(icon_definition_dir):
         cairosvg.svg2png(url=imagefile, parent_width = inputfile["size"], parent_height = inputfile["size"], write_to=tempfile)
         tempsize=(inputfile["size"],inputfile["size"])
 
-        # if we have a specific canvas size, create a new image of its size and there paste the icon centered
+        # if we have a specific canvas size, create a new image of its size and there paste the icon related to the gravity
         if "canvas" in inputfile:
-          pad = (inputfile["canvas"]["size"] - inputfile["size"])//2
           can = Image.new(mode="RGBA",size=(inputfile["canvas"]["size"],inputfile["canvas"]["size"]))
-          can.paste(Image.open(tempfile),(pad,pad))
+          can.paste(Image.open(tempfile),getposition(inputfile["canvas"]["size"],inputfile["size"], inputfile["canvas"]["gravity"]))
           can.save(tempfile)
           tempsize=(inputfile["canvas"]["size"],inputfile["canvas"]["size"])
 
