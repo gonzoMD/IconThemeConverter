@@ -62,6 +62,14 @@ for file in os.listdir(icon_definition_dir):
                 cairosvg.svg2png(url=imagefile, parent_width = inputfile["size"], parent_height = inputfile["size"], write_to=tempfile)
                 tempsize=(inputfile["size"],inputfile["size"])
 
+                # if we have a defined image as overlay, paste it, related to its gravity, to our temporary image
+                if "overlay" in inputfile:
+                    ovlsrc = os.path.join(settings["path_icontheme"], inputfile["overlay"]["src"])
+                    cairosvg.svg2png(url=ovlsrc, parent_width = inputfile["overlay"]["size"], parent_height = inputfile["overlay"]["size"], write_to="./temp/overlay.png")
+                    icn = Image.open(tempfile)
+                    icn.paste(Image.open("./temp/overlay.png"),getposition(inputfile["size"],inputfile["overlay"]["size"], inputfile["overlay"]["gravity"]),Image.open("./temp/overlay.png"))
+                    icn.save(tempfile)
+
                 # if we have a specific canvas size, create a new image of its size and there paste the icon related to the gravity
                 if "canvas" in inputfile:
                     can = Image.new(mode="RGBA",size=(inputfile["canvas"]["size"],inputfile["canvas"]["size"]))
