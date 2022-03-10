@@ -62,7 +62,7 @@ for file in os.listdir(icon_definition_dir):
                 cairosvg.svg2png(url=imagefile, parent_width = inputfile["size"], parent_height = inputfile["size"], write_to=tempfile)
                 tempsize=(inputfile["size"],inputfile["size"])
 
-                # if we have a defined image as overlay, paste it, related to its gravity, to our temporary image
+                # if we have a defined image as overlay, paste it, related to its gravity and size
                 if "overlay" in inputfile:
                     ovlsrc = os.path.join(settings["path_icontheme"], inputfile["overlay"]["src"])
                     cairosvg.svg2png(url=ovlsrc, parent_width = inputfile["overlay"]["size"], parent_height = inputfile["overlay"]["size"], write_to="./temp/overlay.png")
@@ -77,8 +77,20 @@ for file in os.listdir(icon_definition_dir):
                     can.save(tempfile)
                     tempsize=(inputfile["canvas"]["size"],inputfile["canvas"]["size"])
 
-                images.append(Image.open(tempfile))
-                sizes.append(tempsize)
+                # if there are different colordepths specified, convert to them
+                if "colordepth" in inputfile:
+                    for color in inputfile["colordepth"]:
+                        if color == 32:
+                            images.append(Image.open(tempfile))
+                            sizes.append(tempsize)
+                        else:
+                            print(color)
+                            #im = Image.new(mode="P", size=tempsize)
+                            #images.append(im)
+                            #sizes.append(tempsize)
+                else:
+                    images.append(Image.open(tempfile))
+                    sizes.append(tempsize)
 
             im = Image.new(mode="RGBA", size=(48,48))
             im.save(output_file, format="ICO", sizes = sizes, append_images = images, bitmap_format="bmp")
