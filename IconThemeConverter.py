@@ -31,32 +31,54 @@ def getposition(sizea, sizeb, gravity="center"):
 with open('settings.json', 'r') as f:
     settings = json.load(f)
 
+# get the directory with the source files from the settings
+icon_definition_dir = os.fsencode(settings["path_jsonfiles"])
+
+# check if the directory exists. if yes, get a list of containing files, if not, quit with an error message
+if os.path.exists(icon_definition_dir):
+    icon_definitions = os.listdir(icon_definition_dir)
+else:
+    print("Error: The directory ", icon_definition_dir, " does not exist. Please check the value of 'path_jsonfiles' in settings.json!")
+    quit()
+
+# get the directory with the icon theme from the settings
+icon_theme_dir = os.fsencode(settings["path_icontheme"])
+
+# quit with an error message, if the directory doesn't exist
+if not os.path.exists(icon_theme_dir):
+    print("Error: The directory ", icon_theme_dir, " does not exist. Please check the value of 'path_icontheme' in settings.json!")
+    quit()
+
+# if we have no temp directory yet create one
 if os.path.exists("./temp") == False:
     os.mkdir("./temp")
 
-icon_definition_dir = os.fsencode(settings["path_jsonfiles"])
-
 # process all icon definition files
-for file in os.listdir(icon_definition_dir):
+for file in icon_definitions:
     if os.fsdecode(file).endswith(".json"):
         filename = os.path.join(icon_definition_dir, file)
+        print("process icon definition file:", filename)
         with open(filename, 'r') as f:
             curfile = json.load(f)
+
+        # get the output directory where the icons will be saved to from the icon definition file, and create it if it doesn't exist yet
         output_path = os.path.join("./output", curfile["path_out_ico"])
-        print(f"process definition file {filename}")
-        print(f"save icons to {output_path}")
+        print("target directory:", output_path)
         if os.path.exists(output_path) == False:
             os.makedirs(output_path)
 
-        # process all icons in the current file
+        # process all icons in the current icon definition file
         for icon in curfile["icon"]:
-            output_file = os.path.join(output_path, icon["file_out"])
-            print(output_file)
+            
             images=[]
             sizes=[]
+
             # read all inputfiles for this icon
             for inputfile in icon["file_in"]:
                 imagefile = os.path.join(settings["path_icontheme"], inputfile["src"])
+                if not os.path.exists(imagefile):
+                    print("warning: unable to find source image file:", imagefile, "\n\t Skip it.")
+                    continue
                 tempfile = str(inputfile["size"]) + ".png"
                 tempfile = os.path.join("./temp", tempfile)
                 cairosvg.svg2png(url=imagefile, output_width = inputfile["size"], output_height = inputfile["size"], write_to=tempfile)
@@ -65,10 +87,14 @@ for file in os.listdir(icon_definition_dir):
                 # if we have a defined image as overlay, paste it, related to its gravity and size
                 if "overlay" in inputfile:
                     ovlsrc = os.path.join(settings["path_icontheme"], inputfile["overlay"]["src"])
-                    cairosvg.svg2png(url=ovlsrc, parent_width = inputfile["overlay"]["size"], parent_height = inputfile["overlay"]["size"], write_to="./temp/overlay.png")
-                    icn = Image.open(tempfile)
-                    icn.paste(Image.open("./temp/overlay.png"),getposition(inputfile["size"],inputfile["overlay"]["size"], inputfile["overlay"]["gravity"]),Image.open("./temp/overlay.png"))
-                    icn.save(tempfile)
+                    if os.path.exists(ovlsrc):
+
+                        cairosvg.svg2png(url=ovlsrc, parent_width = inputfile["overlay"]["size"], parent_height = inputfile["overlay"]["size"], write_to="./temp/overlay.png")
+                        icn = Image.open(tempfile)
+                        icn.paste(Image.open("./temp/overlay.png"),getposition(inputfile["size"],inputfile["overlay"]["size"], inputfile["overlay"]["gravity"]),Image.open("./temp/overlay.png"))
+                        icn.save(tempfile)
+                    else:
+                        print("warning: unable to find overlay image file:", ovlsrc, "\n\t Skip it and ignore the overlay.")
 
                 # if we have a specific canvas size, create a new image of its size and there paste the icon related to the gravity
                 if "canvas" in inputfile:
@@ -92,6 +118,9 @@ for file in os.listdir(icon_definition_dir):
                     images.append(Image.open(tempfile))
                     sizes.append(tempsize)
 
+            # get the target filename and save the images into an .ico file        
+            output_file = os.path.join(output_path, icon["file_out"])
+            print("save icon:", output_file)
             im = Image.new(mode="RGBA", size=(48,48))
             im.save(output_file, format="ICO", sizes = sizes, append_images = images, bitmap_format="bmp")
 
