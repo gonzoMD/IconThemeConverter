@@ -59,7 +59,7 @@ for file in os.listdir(icon_definition_dir):
                 imagefile = os.path.join(settings["path_icontheme"], inputfile["src"])
                 tempfile = str(inputfile["size"]) + ".png"
                 tempfile = os.path.join("./temp", tempfile)
-                cairosvg.svg2png(url=imagefile, parent_width = inputfile["size"], parent_height = inputfile["size"], write_to=tempfile)
+                cairosvg.svg2png(url=imagefile, output_width = inputfile["size"], output_height = inputfile["size"], write_to=tempfile)
                 tempsize=(inputfile["size"],inputfile["size"])
 
                 # if we have a defined image as overlay, paste it, related to its gravity and size
