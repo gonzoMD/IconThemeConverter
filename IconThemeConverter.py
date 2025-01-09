@@ -121,7 +121,7 @@ for file in icon_definitions:
             # get the target filename and save the images into an .ico file        
             output_file = os.path.join(output_path, icon["file_out"])
             print("save icon:", output_file)
-            im = Image.new(mode="RGBA", size=(48,48))
+            im = Image.open(tempfile)
             im.save(output_file, format="ICO", sizes = sizes, append_images = images, bitmap_format="bmp")
 
         continue
