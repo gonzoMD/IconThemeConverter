@@ -89,7 +89,7 @@ for file in icon_definitions:
                     ovlsrc = os.path.join(settings["path_icontheme"], inputfile["overlay"]["src"])
                     if os.path.exists(ovlsrc):
 
-                        cairosvg.svg2png(url=ovlsrc, parent_width = inputfile["overlay"]["size"], parent_height = inputfile["overlay"]["size"], write_to="./temp/overlay.png")
+                        cairosvg.svg2png(url=ovlsrc, output_width = inputfile["overlay"]["size"], output_height = inputfile["overlay"]["size"], write_to="./temp/overlay.png")
                         icn = Image.open(tempfile)
                         icn.paste(Image.open("./temp/overlay.png"),getposition(inputfile["size"],inputfile["overlay"]["size"], inputfile["overlay"]["gravity"]),Image.open("./temp/overlay.png"))
                         icn.save(tempfile)
