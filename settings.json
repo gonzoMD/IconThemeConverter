@@ -1,6 +1,4 @@
 {
-    "inkscape": "C:/Program Files/Inkscape/bin/inkscape.exe",
-    "magick":"D:/Program Files/ImageMagick-7.0.10-Q16-HDRI/magick.exe",
     "path_icontheme":"path/to/source/icon/theme",
     "path_jsonfiles":"path/to/icon/definitions"
 }
